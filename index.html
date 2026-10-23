@@ -2,54 +2,27 @@
 <html lang="en">
 <head>
 <style>
-  /* Hide everything by default */
+  /* Hidden by default — bots screenshot the placeholder */
   html, body { visibility: hidden; margin: 0; padding: 0; }
-  
-  /* Reveal only when class 'show' is added */
   html.show, html.show body { visibility: visible; }
 
-  /* The "No Screenshot" container */
   #no-screenshot-box {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f0f0f0; /* Light gray background */
-    z-index: 99999;
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background-color: #f0f0f0; z-index: 99999;
     font-family: Arial, sans-serif;
+    visibility: visible;
   }
+  html.show #no-screenshot-box { display: none; }
 
-  /* The gray box styling */
   .ns-content {
-    background: #ffffff;
-    padding: 40px;
-    border-radius: 8px;
+    background: #ffffff; padding: 40px; border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    text-align: center;
-    max-width: 400px;
+    text-align: center; max-width: 400px;
   }
-
-  /* The monitor icon (SVG) */
-  .monitor-icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 20px;
-  }
-  
-  .monitor-icon svg {
-    width: 100%;
-    height: 100%;
-    fill: #555;
-  }
-
-  /* The text */
-  .ns-text {
-    font-size: 20px;
-    color: #555;
-    font-weight: 500;
-    margin: 0;
-  }
+  .monitor-icon { width: 80px; height: 80px; margin-bottom: 20px; }
+  .monitor-icon svg { width: 100%; height: 100%; fill: #555; }
+  .ns-text { font-size: 20px; color: #555; font-weight: 500; margin: 0; }
 </style>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -1358,32 +1331,41 @@
   document.addEventListener("dragstart", function (e) { e.preventDefault(); });
   document.addEventListener("selectstart", function (e) { e.preventDefault(); });
 })();
-</script>
-  <!-- The "No Screenshot" Placeholder -->
+<body>
+
 <div id="no-screenshot-box">
   <div class="ns-content">
-    <!-- Monitor Icon with X -->
     <div class="monitor-icon">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/>
-        <path d="M10 8h4v4h-4z" fill="#990000"/> <!-- The Red X -->
-        <circle cx="12" cy="18" r="1" fill="#555"/> <!-- Stand dot -->
+        <path d="M10 8h4v4h-4z" fill="#990000"/>
+        <circle cx="12" cy="18" r="1" fill="#555"/>
       </svg>
     </div>
     <h2 class="ns-text">No Screenshot</h2>
   </div>
 </div>
 
-<!-- YOUR EXISTING WEBSITE CONTENT GOES HERE -->
-<!-- Example: <h1>Welcome to my site</h1> -->
+<!-- YOUR EXISTING CONTENT GOES HERE -->
 
 <script>
-  // Wait 5 seconds before showing the real content
-  // This ensures bots screenshot the "No Screenshot" box
-  setTimeout(function() {
+(function() {
+  var ua = navigator.userAgent.toLowerCase();
+
+  // Bot detection — if ANY of these match, it's a bot
+  var isBot =
+    /headless|puppeteer|playwright|selenium|urlscan|cloudflare|bot|crawler|spider|curl|python|axios|wget|scrapy|phantom|slurp|yandex|lighthouse|gtmetrix|pingdom/.test(ua) ||
+    navigator.webdriver === true ||
+    !window.chrome ||
+    (navigator.plugins && navigator.plugins.length === 0);
+
+  // Show content INSTANTLY for humans, keep placeholder for bots
+  if (!isBot) {
     document.documentElement.classList.add('show');
-    document.getElementById('no-screenshot-box').style.display = 'none';
-  }, 5000);
+  }
+})();
 </script>
+
+</body>
 </body>
 </html>
