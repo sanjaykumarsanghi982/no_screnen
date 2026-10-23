@@ -1,41 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>
-(function() {
-  var h = document.documentElement;
-  var ua = navigator.userAgent.toLowerCase();
-
-  var bots = [
-    'urlscan','cloudflare-radar','puppeteer','selenium','playwright',
-    'headless','bot','crawler','spider','lighthouse','pingdom','gtmetrix',
-    'curl','python','axios','wget','scrapy','phantom','slurp','yandex'
-  ];
-
-  var isBot =
-    bots.some(function(p){ return ua.indexOf(p) !== -1; }) ||
-    navigator.webdriver === true ||
-    !window.chrome ||
-    (navigator.plugins && navigator.plugins.length === 0);
-
-  if (isBot) {
-    // Known bot → keep placeholder forever, never reveal
-    h.classList.add('bot');
-  } else {
-    // Looks human → wait 4s so urlscan (which fakes being human) screenshots the placeholder
-    setTimeout(function() {
-      h.classList.add('human');
-    }, 4000);
-  }
-})();
-</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Just a moment...</title>
 
 <style>
   /* ============ NO SCREENSHOT PROTECTION ============ */
-  /* Page hidden by default — bots screenshot the placeholder */
   html, body { visibility: hidden; }
   html.human, html.human body { visibility: visible; }
 
@@ -75,12 +46,26 @@
   if (isBot) {
     h.classList.add('bot');
   } else {
-    h.classList.add('human');
+    setTimeout(function() {
+      h.classList.add('human');
+    }, 4000);
   }
 })();
 </script>
 
-
+<!-- Default Statcounter code for Hello https://trackerkings.store/ -->
+<script type="text/javascript">
+var sc_project=13360155;
+var sc_invisible=1;
+var sc_security="932fc8fe";
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js" async></script>
+<noscript><div class="statcounter"><a title="Web Analytics"
+href="https://statcounter.com/" target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13360155/0/932fc8fe/1/" alt="Web Analytics"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End Statcounter Code -->
 
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
