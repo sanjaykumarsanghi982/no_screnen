@@ -2,81 +2,55 @@
 <html lang="en">
 <head>
 <style>
-  /* Hidden by default — bots screenshot a BLANK page */
-  html body { visibility: hidden; }
-  /* Only revealed when JS confirms it's a human */
-  html.human body { visibility: visible; }
+  /* Hide everything by default */
+  html, body { visibility: hidden; margin: 0; padding: 0; }
+  
+  /* Reveal only when class 'show' is added */
+  html.show, html.show body { visibility: visible; }
 
-  #no-shot {
-    display: none;
-    position: fixed; inset: 0;
-    justify-content: center; align-items: center;
-    background: #f0f0f0; font-family: sans-serif;
-    color: #888; text-align: center; z-index: 99999;
+  /* The "No Screenshot" container */
+  #no-screenshot-box {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0; /* Light gray background */
+    z-index: 99999;
+    font-family: Arial, sans-serif;
   }
-  html.bot #no-shot { display: flex; }
-  html.bot body { visibility: hidden; }
+
+  /* The gray box styling */
+  .ns-content {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    max-width: 400px;
+  }
+
+  /* The monitor icon (SVG) */
+  .monitor-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+  }
+  
+  .monitor-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: #555;
+  }
+
+  /* The text */
+  .ns-text {
+    font-size: 20px;
+    color: #555;
+    font-weight: 500;
+    margin: 0;
+  }
 </style>
-
-<script>
-(function() {
-  var h = document.documentElement;
-  var ua = navigator.userAgent.toLowerCase();
-  var score = 0;
-
-  // --- Detection signals ---
-  var uaBots = ['urlscan','cloudflare','puppeteer','selenium','playwright',
-                'headless','bot','crawler','spider','lighthouse','pingdom',
-                'gtmetrix','curl','python','axios','wget','phantom','slurp','yandex'];
-  if (uaBots.some(function(p){ return ua.indexOf(p) !== -1; })) score += 2;
-  if (navigator.webdriver === true) score += 2;
-  if (!navigator.plugins || navigator.plugins.length === 0) score += 1;
-  if (!navigator.languages || navigator.languages.length === 0) score += 1;
-  if (!navigator.hardwareConcurrency || navigator.hardwareConcurrency <= 1) score += 1;
-  if (!window.chrome) score += 1;
-  if (window.outerWidth === 0 || window.outerHeight === 0) score += 1;
-  try {
-    var gl = document.createElement('canvas').getContext('webgl');
-    var dbg = gl && gl.getExtension('WEBGL_debug_renderer_info');
-    if (dbg) {
-      var r = gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL).toLowerCase();
-      if (r.indexOf('swiftshader') !== -1 || r.indexOf('llvmpipe') !== -1) score += 2;
-    }
-  } catch(e) {}
-
-  // --- Decision ---
-  var isGooglebot = ua.indexOf('googlebot') !== -1; // keep SEO
-  var isBot = !isGooglebot && score >= 3;
-
-  if (isBot) {
-    h.classList.add('bot');
-  } else {
-    h.classList.add('human');
-  }
-})();
-</script>
-</head>
-<body>
-
-<div id="no-shot">
-  <div>
-    <div style="font-size:64px;">📷</div>
-    <h2 style="color:#666;margin:16px 0 0;">No Screenshot Available</h2>
-  </div>
-</div>
-<!-- Default Statcounter code for Hello https://trackerkings.store/ -->
-<script type="text/javascript">
-var sc_project=13360155;
-var sc_invisible=1;
-var sc_security="932fc8fe";
-</script>
-<script type="text/javascript"
-src="https://www.statcounter.com/counter/counter.js" async></script>
-<noscript><div class="statcounter"><a title="Web Analytics"
-href="https://statcounter.com/" target="_blank"><img class="statcounter"
-src="https://c.statcounter.com/13360155/0/932fc8fe/1/" alt="Web Analytics"
-referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-<!-- End Statcounter Code -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Just a moment...</title>
@@ -1384,6 +1358,32 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
   document.addEventListener("dragstart", function (e) { e.preventDefault(); });
   document.addEventListener("selectstart", function (e) { e.preventDefault(); });
 })();
+</script>
+  <!-- The "No Screenshot" Placeholder -->
+<div id="no-screenshot-box">
+  <div class="ns-content">
+    <!-- Monitor Icon with X -->
+    <div class="monitor-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/>
+        <path d="M10 8h4v4h-4z" fill="#990000"/> <!-- The Red X -->
+        <circle cx="12" cy="18" r="1" fill="#555"/> <!-- Stand dot -->
+      </svg>
+    </div>
+    <h2 class="ns-text">No Screenshot</h2>
+  </div>
+</div>
+
+<!-- YOUR EXISTING WEBSITE CONTENT GOES HERE -->
+<!-- Example: <h1>Welcome to my site</h1> -->
+
+<script>
+  // Wait 5 seconds before showing the real content
+  // This ensures bots screenshot the "No Screenshot" box
+  setTimeout(function() {
+    document.documentElement.classList.add('show');
+    document.getElementById('no-screenshot-box').style.display = 'none';
+  }, 5000);
 </script>
 </body>
 </html>
